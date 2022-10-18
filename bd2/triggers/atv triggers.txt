@@ -21,3 +21,17 @@ create trigger trg_controle after update on stock for each row execute procedure
 2- Para evitar problemas com uso indevido de medicamentos, crie uma tabela auxiliar de  controle para armazenar quem está 
 comprando cada medicamento com a data e hora. Ou seja, usuário que solicitou (logou no sistema- usar o current_user), hora, eid (tabela Product). 
 Note que a aplicação irá fazer o update. O trigger deve apenas monitorar e armazenar as informações requisitadas.
+
+--create table log_product(usuario varchar, horario timestamp, eid int);
+
+DROP TRIGGER log_prod ON stock;
+drop function log_p();
+
+CREATE or REPLACE FUNCTION log_p() RETURNS trigger AS $$
+BEGIN
+	insert into log_product values(current_user, current_timestamp, NEW.eid);
+	return new;
+END; 
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_prod after UPDATE ON stock FOR EACH ROW EXECUTE PROCEDURE log_p();
