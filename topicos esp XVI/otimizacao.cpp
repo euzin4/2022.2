@@ -20,7 +20,7 @@ void search (int s, int i, int j){
         return;
     }
     if(s == 0 && i == 0 && j == 0){
-        //primeira pos vai sempre pra baixo
+        //primeira posicao vai sempre pra baixo
         grid[i][j]=1;
         search(s+1,i+1,j);
         grid[i+1][j]=0;
@@ -54,7 +54,7 @@ void search (int s, int i, int j){
 int main() {
     search(0,0,0);
 
-    cout << cont << endl;
+    cout << cont*2 << endl;
 
     return 0;
 }
