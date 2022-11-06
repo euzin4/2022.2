@@ -44,6 +44,7 @@ imp_mat:
 	la t1, matriz
 	mv s1, zero
 	lw s0, tam
+	li s2, 0
 imprimir:
 	lw a0, 0(t1)
 	li a7, 1
@@ -67,7 +68,7 @@ loop_print:
 maior_val:
 	#encontra o maior valor da matriz e imprime o valor a linha e a coluna em que ele esta
 	
-#--------------------------------------ORDENAR
+#--------------------------------------ORDENAR MATRIZ
 ordenar:
 	la t1, matriz
 inicializa_bubble_sort:
