@@ -1,5 +1,5 @@
 		.data
-matriz:		.word	4,2,6,7,1,9,3,5,8
+matriz:		.word	4,2,6,7,1,9,3,5,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 tam:		.word 	3
 txt_menu:	.string	"1-ler os valores da matriz\n2-imprimir matriz\n3-maior valor da matriz\n4-ordenar a matriz\n5-determinante da matriz\n"
 txt_erro:	.string	"valor inválido\n\n"
@@ -10,6 +10,9 @@ impsv:		.string "Impossivel calcular o determinante!"
 txt_maior:	.string	"Maior valor: "
 txt_linha:	.string	"linha: "
 txt_coluna:	.string	"coluna: "
+txt_ordem:	.string	"Digite a ordem da matriz: "
+txt_valores:	.string	"Digite os valores: "
+txt_erro_ordem:	.string	"Deve ser um valor entre 2 e 6"
 		
 		.text
 main:
@@ -41,8 +44,46 @@ erro:
 	ecall
 	j menu
 	
+#--------------------------------------INSERE VALORES NA MATRIZ
 ler_val:
-	#insere valores na matriz
+	la s0,matriz
+	li t0,2
+	li t1,7
+	la t2,tam
+	li t4,0		#contador de entrada de valores
+
+	la a0,txt_ordem
+	li a7,4
+	ecall		#"Digite a ordem da matriz: "
+dig_ord:
+	li a7,5
+	ecall		#digita a ordem
+	blt a0,t0,erro_ord
+	bge a0,t1, erro_ord
+	mv a1,a0
+	sw a1,0(t2)	#salva a ordem(tamanho) na memoria
+	mul t3,a1,a1	#numero de valores que cabem na matriz
+	la a0,txt_valores
+	li a7,4
+	ecall
+	
+dig_val:
+	beq t4,t3,menu
+	li a7,5
+	ecall
+	sw a0,0(s0)
+	addi s0,s0,4
+	addi t4,t4,1
+	j dig_val
+	
+erro_ord:
+	la a0,txt_erro_ordem
+	li a7,4
+	ecall
+	la a0,queb
+	li a7,4
+	ecall
+	j dig_ord
 	
 #--------------------------------------IMPRIMIR MATRIZ
 imp_mat:
@@ -70,12 +111,14 @@ loop_print:
 	beq s2, s0, menu
 	j imprimir
 	
-#--------------------------------------MAIOR VALOR('valor' 'linha' 'coluna')
+#--------------------------------------MAIOR VALOR
 maior_val:
 	la s0, matriz
 	lw a1, tam
 	li t0,0		#contador linha
 	li t1,0		#contador coluna
+	li s2,0
+	li s3,0
 	lw s1,0(s0)	#salva o primeiro valor da matriz
 	addi t5,a1,-1	#tam -1
 	mul t3,t5,t5	#t3='tam-1'*'tam-1'
