@@ -5,6 +5,8 @@ txt_menu:	.string	"1-ler os valores da matriz\n2-imprimir matriz\n3-maior valor 
 txt_erro:	.string	"valor inválido\n\n"
 queb:		.string "\n"
 esp:		.string " "
+det:		.string "O determinante da matriz é: "
+impsv:		.string "Impossivel calcular o determinante!"
 		
 		.text
 main:
@@ -99,5 +101,104 @@ loop_ord:
 	beq t5, zero, menu #Se t5 for igual a zero, isso significa que a ordenacao foi finalizada.
 	j ordenar_mat #Se t5 nao for igual a zero, a ordenacao continua
 	
+#--------------------------------------CALCULA DETERMINANTE
 determ:
-	#encontra o determinante da matriz
+	la t1, matriz #recarrega o endereço da mat
+	lw a1, tam
+	
+	li t2, 2 #para verificar o tamanho da mat
+	li t3, 3 #para verificar o tamanho da mat
+	mv s1, zero #reseta o reg s1
+	beq a1, t3, det_3x3 #Pula para o rotulo que calcula o det da mat se for 3x3
+	bne a1, t2, imp_calc #Se a mat nao for 2x2 e nem 3x3, nao calcula
+	
+	#Cacula o det da mat 2x2
+	lw t4, 0(t1)
+	lw t5, 12(t1)
+	mul s1, t4, t5
+	lw t4, 4(t1)
+	lw t5, 8(t1)
+	mul t4, t4, t5
+	sub s1, s1, t4
+	
+	#Imprime o resultado
+	la a0, det
+	li a7, 4
+	ecall
+	mv a0, s1
+	li a7, 1
+	ecall
+	la a0, queb
+	li a7, 4
+	ecall
+	j menu
+	
+det_3x3:
+	# + (x[0][0] * x[1][1] * x[2][2])
+	lw t4, 0(t1)
+	lw t5, 16(t1)
+	mul t4, t4, t5
+	lw t5, 32(t1)
+	mul t4, t4, t5
+	add s1, s1, t4
+	
+	# + (x[0][1] * x[1][2] * x[0][2])
+	lw t4, 4(t1)
+	lw t5, 20(t1)
+	mul t4, t4, t5
+	lw t5, 24(t1)
+	mul t4, t4, t5
+	add s1, s1, t4
+	
+	# + (x[0][2] * x[0][1] * x[2][1])
+	lw t4, 8(t1)
+	lw t5, 12(t1)
+	mul t4, t4, t5
+	lw t5, 28(t1)
+	mul t4, t4, t5
+	add s1, s1, t4
+	
+	# - (x[0][2] * x[1][1] * x[2][0])
+	lw t4, 8(t1)
+	lw t5, 16(t1)
+	mul t4, t4, t5
+	lw t5, 24(t1)
+	mul t4, t4, t5
+	sub s1, s1, t4
+	
+	# - (x[0][0] * x[0][2] * x[2][1])
+	lw t4, 0(t1)
+	lw t5, 20(t1)
+	mul t4, t4, t5
+	lw t5, 28(t1)
+	mul t4, t4, t5
+	sub s1, s1, t4
+	
+	# - (x[0][1] * x[1][0] * x[2][2])
+	lw t4, 4(t1)
+	lw t5, 12(t1)
+	mul t4, t4, t5
+	lw t5, 32(t1)
+	mul t4, t4, t5
+	sub s1, s1, t4
+	
+	#Imprime o resultado
+	la a0, det
+	li a7, 4
+	ecall
+	mv a0, s1
+	li a7, 1
+	ecall
+	la a0, queb
+	li a7, 4
+	ecall
+	j menu
+
+imp_calc:
+	#Printa a msg de impossivel calcular
+	la a0, impsv
+	li a7, 4
+	ecall
+	la a0, queb
+	ecall
+	j menu
