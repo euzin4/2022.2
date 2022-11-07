@@ -80,22 +80,22 @@ maior_val:
 	addi t5,a1,-1	#tam -1
 	mul t3,t5,t5	#t3='tam-1'*'tam-1'
 	
-l_maior:
+lp_maior:
+	mul t4,t0,t1		#t4=linha*coluna
+	beq t3,t4,print_maior	#se toda matriz foi percorrida desvia
 	addi s0,s0,4		#somador do endereço
 	lw t2,0(s0)		#salva o valor que esta no endereço
 	addi t1,t1,1		#somador da coluna
 	beq t1,a1,somd_linha	#somador da linha
 v_somd_linha:
 	bgt t2,s1,troca		#se atual>=maior vai para 'troca'
-	mul t4,t0,t1		#t4=linha*coluna
-	beq t3,t4,print_maior	#se toda matriz foi percorrida desvia
-	j l_maior
+	j lp_maior
 		
 troca:
 	mv s1,t2	#s1 recebe o valor maior
 	mv s2,t0	#s2 recebe a linha do valor
 	mv s3,t1	#s3 recebe a coluna do valor
-	j l_maior
+	j lp_maior
 	
 somd_linha:
 	addi t0,t0,1	#somador da linha
