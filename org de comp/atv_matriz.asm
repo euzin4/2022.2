@@ -7,6 +7,9 @@ queb:		.string "\n"
 esp:		.string " "
 det:		.string "O determinante da matriz é: "
 impsv:		.string "Impossivel calcular o determinante!"
+txt_maior:	.string	"Maior valor: "
+txt_linha:	.string	"linha: "
+txt_coluna:	.string	"coluna: "
 		
 		.text
 main:
@@ -67,8 +70,68 @@ loop_print:
 	beq s2, s0, menu
 	j imprimir
 	
+#--------------------------------------MAIOR VALOR('valor' 'linha' 'coluna')
 maior_val:
-	#encontra o maior valor da matriz e imprime o valor a linha e a coluna em que ele esta
+	la s0, matriz
+	lw a1, tam
+	li t0,0		#contador linha
+	li t1,0		#contador coluna
+	lw s1,0(s0)	#salva o primeiro valor da matriz
+	addi t5,a1,-1	#tam -1
+	mul t3,t5,t5	#t3='tam-1'*'tam-1'
+	
+l_maior:
+	addi s0,s0,4		#somador do endereço
+	lw t2,0(s0)		#salva o valor que esta no endereço
+	addi t1,t1,1		#somador da coluna
+	beq t1,a1,somd_linha	#somador da linha
+v_somd_linha:
+	bgt t2,s1,troca		#se atual>=maior vai para 'troca'
+	mul t4,t0,t1		#t4=linha*coluna
+	beq t3,t4,print_maior	#se toda matriz foi percorrida desvia
+	j l_maior
+		
+troca:
+	mv s1,t2	#s1 recebe o valor maior
+	mv s2,t0	#s2 recebe a linha do valor
+	mv s3,t1	#s3 recebe a coluna do valor
+	j l_maior
+	
+somd_linha:
+	addi t0,t0,1	#somador da linha
+	li t1,0		#zera o somador da linha
+	j v_somd_linha
+	
+print_maior:
+	la a0,txt_maior
+	li a7,4
+	ecall		#"Maior valor: "
+	mv a0,s1
+	li a7,1
+	ecall		#printa o maior valor
+	la a0,esp
+	li a7,4
+	ecall
+	la a0,txt_linha
+	li a7,4
+	ecall		#"linha: "
+	mv a0,s2
+	li a7,1
+	ecall		#printa a linha do maior valor
+	la a0,esp
+	li a7,4
+	ecall
+	la a0,txt_coluna
+	li a7,4
+	ecall		#"coluna: "
+	mv a0,s3
+	li a7,1
+	ecall		#printa a coluna do maior valor
+	
+	la a0, queb
+	li a7,4
+	ecall
+	j menu
 	
 #--------------------------------------ORDENAR MATRIZ
 ordenar:
