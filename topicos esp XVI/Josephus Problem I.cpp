@@ -2,33 +2,46 @@
 using namespace std;
 #define ll long long
 
-ll n,atual=0,excl=1;
-vector<ll> vet,res;
+ll n,imp=0;
+list<ll> lst,res;
+list<ll>::iterator it,it2,it1;
 
-int main()
-{
+
+void ultimo_impar(){
+    it=lst.begin();
+    lst.erase(it);
+    it=lst.begin();
+}
+
+int main(){
     cin >> n;
 
     for(int i=1;i<=n;i++){
-        vet.push_back(i);
+        lst.push_back(i);
     }
-    while(n>0){
-        if(vet[atual] == 300000){
-            atual++;
-            excl=atual+1;
+
+    if(n%2 == 1){
+        imp=1;
+    }
+
+    it=lst.begin();
+    it1=it;
+    advance(it1,1);
+    it2=lst.end();
+    it2--;
+    while(!lst.empty()){
+        if(imp==1 && it== it2){
+            ultimo_impar();
         }else{
-            if(vet[atual] != 300000 && vet[excl]!=300000){
-                res.push_back(vet[excl]);
-                vet[excl]=300000;
-                n--;
-                atual=atual+2;
-                excl=atual+1;
-                if(excl>=vet.size() && atual!=300000){
-                    atual=-1;
-                    excl=atual+1;
-                }
-            }else if(vet[atual] != 300000){
-                excl++;
+            if(it== lst.end()){
+                it=lst.begin();
+                cout << *it;
+                lst.erase(it);
+            }else{
+                cout << *it1;
+                it=lst.erase(it1);
+                it1=it;
+                advance(it1,1);
             }
         }
     }
