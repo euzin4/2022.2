@@ -9,8 +9,8 @@ list<ll>::iterator it,it2,it1;
 
 void ultimo_impar(){
     it=lst.begin();
-    lst.erase(it);
-    it=lst.begin();
+    it=lst.erase(it);
+    //it=lst.begin();
 }
 
 int main(){
@@ -34,9 +34,19 @@ int main(){
             ultimo_impar();
         }else{
             if(it== lst.end()){
-                it=lst.begin();
-                cout << *it;
-                lst.erase(it);
+                if(lst.size() == 1){
+                    it=lst.begin();
+                    cout << *it;
+                    lst.erase(it);
+                }else{
+                    it=lst.begin();
+                    it1=it;
+                    advance(it1,1);
+                    cout << *it1;
+                    it=lst.erase(it1);
+                    it1=it;
+                    advance(it1,1);
+                }
             }else{
                 cout << *it1;
                 it=lst.erase(it1);
