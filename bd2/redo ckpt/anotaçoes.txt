@@ -1,0 +1,1 @@
+site sobre python e postgres: https://acervolima.com/python-gerenciamento-de-banco-de-dados-em-postgresql/
