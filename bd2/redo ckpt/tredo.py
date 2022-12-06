@@ -16,7 +16,7 @@ cur = conn.cursor()			#conecta ao BD
 
 cur.execute('SELECT * FROM tredo')
 data = cur.fetchall()
-for linha in data:		#lê os da tabela no BD
+for linha in data:		#lê os dados da tabela no BD
 	print('id:', linha[0],end=" ")		#o end substitui o ultimo caracter '/n' pelo que for colocado entre as aspas, aqui serve para imprimir tudo na mesma linha
 	print('A:', linha[1],end=" ")
 	print('B:', linha[2])
