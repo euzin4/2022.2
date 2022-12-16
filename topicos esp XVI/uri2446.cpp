@@ -3,7 +3,7 @@ using namespace std;
 
 int v,m,val;
 vector<int> vet;
-string res;
+char res;
 
 int main(){
     cin >> v >> m;
@@ -23,9 +23,9 @@ int main(){
         }
     }
     if(v==0){
-        res = "S";
+        res = 'S';
     }else{
-        res = "N";
+        res = 'N';
     }
     cout << res << "\n";
 
