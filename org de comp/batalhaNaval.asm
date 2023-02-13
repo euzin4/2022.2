@@ -46,7 +46,7 @@ fim:
 	li   a7, 10
 	ecall
 	
-########################################reiniciar
+################## reiniciar
 
 reiniciar:
 	la t1, matriz_navios
@@ -69,7 +69,7 @@ fim_reinicia:
 	jal insere_embarcacoes
 	j menu
 
-####################################### insere_embarcacoes
+################## insere_embarcacoes
 insere_embarcacoes:
 	la t0, navios
 	lb s0, 0(t0)
@@ -171,7 +171,7 @@ fim_insercao:
 	ecall
 	ret
 	
-####################################### imprime_matriz
+################## imprime_matriz
 qbl:
 	la a0,ql
 	li a7,4
