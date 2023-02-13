@@ -5,17 +5,39 @@ tam:		.word	100
 matriz_usuario:	.string	"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 navios:		.string	"3\n1 5 1 1\n0 5 2 2\n0 1 6 4"
 ql:		.string "\n"
+txt_menu:	.string	"1)reiniciar jogo\n2)imprimir matriz_navios\n"
+txt_erro:	.string	"valor inválido\n\n"
 
 		.text
 main:
-	#insere imbarcações
+################## insere imbarcações
 	la 	a0, navios  			# a0 recebe o endereço inicial da string navios
 	la	a1, matriz_navios 		# a1 recebe o endereço inicial da matriz navios
 	jal	insere_embarcacoes		# chama funçao que insere os navios
 	
-	#imprime 'matriz_navios'
-	jal	imprime_matriz_navios			# imprime matriz
-
+################## menu
+menu:
+	li a7,4
+	la a0,txt_menu
+	ecall		#imprime o menu
+	li a7,5
+	ecall		#le a seleçao do menu
+	
+	li t1,1
+	li t2,2
+	blt a0,t1,erro	#entrada<1 entao 'erro'
+	bgt a0,t2,erro	#entrada>2 entao 'erro'
+	
+	#beq a0,t1,reiniciar
+	beq a0,t2,imprime_matriz_navios
+	
+erro:
+	li a7,4
+	la a0,txt_erro
+	ecall
+	j menu
+	
+################## fim do programa
 fim:	
 	nop
 	li   a7, 10
