@@ -8,17 +8,13 @@ ql:		.string "\n"
 
 		.text
 main:
-#	la 	a0, navios  			# imprime string com posiçao dos navios
-#	li 	a7,4
-#	ecall
-
 	#insere imbarcações
 	la 	a0, navios  			# a0 recebe o endereço inicial da string navios
 	la	a1, matriz_navios 		# a1 recebe o endereço inicial da matriz navios
 	jal	insere_embarcacoes		# chama funçao que insere os navios
 	
-	#imprime matriz
-	jal	imprime_matriz			# imprime matriz
+	#imprime 'matriz_navios'
+	jal	imprime_matriz_navios			# imprime matriz
 
 fim:	
 	nop
@@ -27,7 +23,7 @@ fim:
 
 ####################################### insere_embarcacoes
 insere_embarcacoes:
-
+	
 		
 
 	ret
@@ -41,7 +37,7 @@ qbl:
 	li a7,1		#volta o a7 para printar int
 	j voltaql
 	
-imprime_matriz:
+imprime_matriz_navios:
 	la t0,matriz_navios
 	li a7,1
 	
