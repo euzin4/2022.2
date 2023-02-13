@@ -5,7 +5,7 @@ tam:			.word	100
 matriz_usuario:		.string	"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 navios:			.string	"3\n1 5 1 1\n0 5 2 2\n0 1 6 4"
 ql:			.string "\n"
-txt_menu:		.string	"1)reiniciar jogo\n2)imprimir matriz_navios\n"
+txt_menu:		.string	"1)reiniciar jogo\n2)imprimir matriz_navios\n3)atirar\n"
 txt_erro:		.string	"valor inválido\n\n"
 indice_imprime:		.string "  0 1 2 3 4 5 6 7 8 9\n"
 espaco:			.string " "
@@ -33,7 +33,7 @@ menu:
 	
 	beq a0,t1,reiniciar
 	beq a0,t2,imprime_matriz_navios
-	#beq a0,t3,jogar
+	beq a0,t3,imprime_matriz_usuario
 erro:
 	li a7,4
 	la a0,txt_erro
@@ -171,7 +171,7 @@ fim_insercao:
 	ecall
 	ret
 	
-################## imprime_matriz
+################## imprime_matriz_navios
 qbl:
 	la a0,ql
 	li a7,4
@@ -224,5 +224,61 @@ loop1:
 	beq t3,t4,qbl	#se t3 == t4(10)
 voltaql:
 	blt t2,t1,loop1	#se contador<100
+
+	ret
+
+################## imprime_matriz_usuario
+qbl_u:
+	la a0,ql
+	li a7,4
+	ecall
+	li t3,0		#zera o cont de ql
+	
+	li t6,10	#limite para imprimir o indice
+	addi t5,t5,1	#soma 1 no contador do indice de linha
+	beq t5,t6,sai_ql
+	mv a0,t5	#copia o valor atual do contador do indice de linha
+	li a7,1
+	ecall		#imprime o indice atual
+	la a0,espaco	
+	li a7,4
+	ecall		#imprime o espaço
+sai_ql_u:
+	j voltaql_u
+	
+imprime_matriz_usuario:
+	la a0,indice_imprime
+	li a7,4
+	ecall		#imprime os indices de coluna
+	
+	la t0,matriz_usuario
+	li a7,11
+	
+	la t1,tam
+	lw t1,0(t1)	#t1=100 tamanho da matriz
+	li t2,0		#t2=0 contador
+	li t3,0		#t3=0 contador quebra de linha
+	li t4,10	#t4=10 limite para quebra de linha, limite indice de linha
+	li t5,0		#t5=0 contador indice de linha
+	
+	mv a0,t5
+	li a7,1
+	ecall		#imprime o primeiro indice de linha
+	la a0,espaco
+	li a7,4
+	ecall		#imprime espaço
+loop1_u:
+	lb a0,0(t0)
+	li a7,11
+	ecall
+	la a0,espaco
+	li a7,4
+	ecall
+	addi t0,t0,1	#+1 endereço
+	addi t2,t2,1	#+1 contador
+	addi t3,t3,1	#+1 contador quebra de linha
+	beq t3,t4,qbl_u	#se t3 == t4(10)
+voltaql_u:
+	blt t2,t1,loop1_u	#se contador<100
 
 	ret
