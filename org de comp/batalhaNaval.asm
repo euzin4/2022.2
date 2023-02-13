@@ -1,16 +1,33 @@
 			.data
 matriz_navios:		.word	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 tam:			.word	100
+tiros:			.word	0
+acertos:		.word	0
+afundados:		.word	0
+v_tiros:		.word	0
+v_acertos:		.word	0
+v_afundados:		.word	0
+v_ultimotiro1:		.word	0
+v_ultimotiro2:		.word	0
 
 matriz_usuario:		.string	"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 navios:			.string	"3\n1 5 1 1\n0 5 2 2\n0 1 6 4"
 ql:			.string "\n"
-txt_menu:		.string	"1)reiniciar jogo\n2)imprimir matriz_navios\n3)atirar\n"
+txt_menu:		.string	"1)atirar\n2)imprimir matriz_usuario\n3)situação atual\n4)imprimir matriz_navios\n5)reiniciar\n6)encerrar jogo\n"
 txt_erro:		.string	"valor inválido\n\n"
 indice_imprime:		.string "  0 1 2 3 4 5 6 7 8 9\n"
 espaco:			.string " "
 msg_inseriu:		.string "deu certo\n\n"
 msg_erro:		.string "deu erro\n\n"
+msg_tiro_certo:		.string "Você acertou!\n\n"
+msg_tiro_err:		.string "Você errou!\n\n"
+msg_tiro_rep:		.string "Essa posição já foi atingida!\n\n"
+msg_recorde:		.string "Recorde"
+msg_voce:		.string "Você: "
+msg_tiros:		.string "Tiros: "
+msg_acertos:		.string "Acertos: "
+msg_afundados:		.string "Afundados: "
+msg_ultimotiro:		.string "Ultimo tiro: "
 
 		.text
 main:
@@ -28,12 +45,18 @@ menu:
 	li t1,1
 	li t2,2
 	li t3,3
+	li t4,4
+	li t5,5
+	li t6,6
 	blt a0,t1,erro	#entrada<1 entao 'erro'
-	bgt a0,t3,erro	#entrada>3 entao 'erro'
+	bgt a0,t6,erro	#entrada>6 entao 'erro'
 	
-	beq a0,t1,reiniciar
-	beq a0,t2,imprime_matriz_navios
-	beq a0,t3,imprime_matriz_usuario
+	beq a0,t1,jogada
+	beq a0,t2,imprime_matriz_usuario
+	beq a0,t3,status
+	beq a0,t4,imprime_matriz_navios
+	beq a0,t5,reiniciar
+	beq a0,t6,fim
 erro:
 	li a7,4
 	la a0,txt_erro
@@ -46,6 +69,113 @@ fim:
 	li   a7, 10
 	ecall
 	
+################## status
+status:
+	la a0,msg_recorde
+	li a7,4
+	ecall
+	la a0,ql
+	ecall
+	la a0,espaco
+	li a7,4
+	ecall
+	la a0,msg_tiros
+	ecall
+	lw a0,tiros
+	li a7,1
+	ecall
+	la a0,ql
+	li a7,4
+	ecall
+	la a0,espaco
+	li a7,4
+	ecall
+	la a0,msg_acertos
+	li a7,4
+	ecall
+	lw a0,acertos
+	li a7,1
+	ecall
+	la a0,ql
+	li a7,4
+	ecall
+	la a0,espaco
+	li a7,4
+	ecall
+	la a0,msg_afundados
+	li a7,4
+	ecall
+	lw a0,afundados
+	li a7,1
+	ecall
+	la a0,ql
+	li a7,4
+	ecall
+	ecall
+	
+	la a0,msg_voce
+	li a7,4
+	ecall
+	la a0,ql
+	li a7,4
+	ecall
+	la a0,espaco
+	li a7,4
+	ecall
+	la a0,msg_tiros
+	li a7,4
+	ecall
+	#lw a0,v_tiros
+	#li a7,1
+	#ecall
+	la a0,ql
+	li a7,4
+	ecall
+	la a0,espaco
+	li a7,4
+	ecall
+	la a0,msg_acertos
+	li a7,4
+	ecall
+	#lw a0,v_acertos
+	#li a7,1
+	#ecall
+	la a0,ql
+	li a7,4
+	ecall
+	la a0,espaco
+	li a7,4
+	ecall
+	la a0,msg_afundados
+	li a7,4
+	ecall
+	#lw a0,v_afundados
+	#li a7,1
+	#ecall
+	la a0,ql
+	li a7,4
+	ecall
+	la a0,espaco
+	li a7,4
+	ecall
+	la a0,msg_ultimotiro
+	li a7,4
+	ecall
+	#lw a0,v_ultimotiro1
+	#li a7,1
+	#ecall
+	la a0,espaco
+	li a7,4
+	ecall
+	#lw a0,v_ultimotiro2
+	#li a7,1
+	#ecall
+	la a0,ql
+	li a7,4
+	ecall
+	
+	j menu
+
 ################## reiniciar
 
 reiniciar:
@@ -78,7 +208,7 @@ insere_embarcacoes:
 	li s11, 9
 	li s10, 10
 	li s9, 4
-	li s8, 1
+	li s8, 2
 	j verifica_dimensoes
 	
 verifica_dimensoes:
@@ -114,7 +244,7 @@ invalido:
 comeca_inserir:
 	la t0, navios
 	lb s0, 0(t0)
-	addi s0, s0, -48
+	addi s0, s0, -47
 	addi t0, t0, 2
 	j verifica_orientacao
 	
@@ -170,6 +300,57 @@ fim_insercao:
 	li a7, 4
 	ecall
 	ret
+
+###################### jogada
+	
+jogada:
+	li a7, 5
+	ecall
+	mv s0, a0
+	li a7, 5
+	ecall
+	la t0, matriz_navios
+	la t1, matriz_usuario
+	mv s1, a0
+	li s2, 10
+	li s4, 4
+	li s6, -1
+	li s7, 88
+	li s8, 79
+	mul s3, s0, s2
+	add s3, s3, s1
+	mul s3, s3, s4
+	add t0, t0, s3
+	div s3, s3, s4
+	add t1, t1, s3
+	lw s5, 0(t0)
+	bgtz s5, tiro_certo
+	beqz s5, tiro_errado
+	beq s5, s6, tiro_repetido
+	blt s5, s6, tiro_repetido
+	
+tiro_certo:
+	mul s5, s5, s6
+	sw s5, 0(t0)
+	sb s7, 0(t1)
+	la a0, msg_tiro_certo
+	li a7, 4
+	ecall
+	j menu
+	
+tiro_errado:
+	la a0, msg_tiro_err
+	li a7, 4
+	ecall
+	sw s6, 0(t0)
+	sb s8, 0(t1)
+	j menu
+	
+tiro_repetido:
+	la a0, msg_tiro_rep
+	li a7, 4
+	ecall
+	j menu
 	
 ################## imprime_matriz_navios
 qbl:
